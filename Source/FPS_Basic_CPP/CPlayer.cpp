@@ -4,6 +4,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/AnimInstance.h"
 
 ACPlayer::ACPlayer()
 {
@@ -27,8 +28,13 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateComponent(this, &Camera, TEXT("Camera"), SpringArm);
 
 	USkeletalMesh* mesh;
-	CHelpers::FindAsset<USkeletalMesh>(&mesh, TEXT("SkeletalMesh'/Game/Characters/UE4Man/Mesh/SK_Mannequin.SK_Mannequin'"));
+	CHelpers::FindAsset<USkeletalMesh>(&mesh, TEXT("SkeletalMesh'/Game/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
 	
+	TSubclassOf<UAnimInstance> animInstance;
+	CHelpers::FindClass<UAnimInstance>(&animInstance, "AnimBlueprint'/Game/ABP_CPlayer.ABP_CPlayer_C'");
+	
+	GetMesh()->SetAnimClass(animInstance);
+
 	GetMesh()->SetSkeletalMesh(mesh);
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
