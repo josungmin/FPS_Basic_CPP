@@ -23,14 +23,23 @@ private:
 		FName HandSocket = "Hand_Gun";
 
 	UPROPERTY(VisibleDefaultsOnly)
-		FName HolsterSocket = "Holster_Rifle_R";
+		FName HolsterSocket = "Holster_Gun_R";
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class USkeletalMeshComponent* Mesh;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UAnimMontage* EquipMontage;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UAnimMontage* UnequipMontage;
 
 
 public:
 	static ACWeapon* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
 
-	FORCEINLINE bool GetEquiped(){ return bEquiped; }
-	FORCEINLINE bool GetEquiping(){ return bEquiping; }
+	FORCEINLINE bool GetEquiped(){ return bEquipped; }
+	FORCEINLINE bool GetEquiping(){ return bEquipping; }
 
 public:
 	void PreEquiped();
@@ -42,6 +51,9 @@ public:
 	void PostUnequiped();
 
 private:
-	bool bEquiped;
-	bool bEquiping;
+	class ACharacter* OwnerCharacter;
+
+private:
+	bool bEquipped;
+	bool bEquipping;
 };

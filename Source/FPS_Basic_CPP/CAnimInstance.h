@@ -10,11 +10,14 @@ class FPS_BASIC_CPP_API UCAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 	
 protected:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Speed;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Direction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool bIsInAir;
 
 public:
 	virtual void NativeBeginPlay() override;

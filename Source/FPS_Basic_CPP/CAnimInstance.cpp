@@ -1,5 +1,6 @@
 #include "CAnimInstance.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UCAnimInstance::NativeBeginPlay()
 {
@@ -16,4 +17,5 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	Speed = OwnerCharacter->GetVelocity().Size2D();
 	Direction = CalculateDirection(OwnerCharacter->GetVelocity(), OwnerCharacter->GetControlRotation());
+	bIsInAir = OwnerCharacter->GetCharacterMovement()->IsFalling();
 }
