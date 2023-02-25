@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
+#include "CWeapon.h"
 
 ACPlayer::ACPlayer()
 {
@@ -41,7 +42,7 @@ ACPlayer::ACPlayer()
 
 	// 배들그라운드와 비슷한 느낌으로 수정 예정
 	// Move
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 
@@ -58,6 +59,8 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Weapon = ACWeapon::Spawn(GetWorld(), this);
+	EquipWeapon();
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -79,6 +82,12 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Running", EInputEvent::IE_Released, this, &ACPlayer::OffRunning);
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+
+	PlayerInputComponent->BindAction("Equip", EInputEvent::IE_Pressed, this, &ACPlayer::EquipWeapon);
+
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &ACPlayer::OnAim);
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &ACPlayer::OffAim);
+
 }
 
 void ACPlayer::OnMoveFrontAndBack(float Axis)
@@ -117,3 +126,43 @@ void ACPlayer::OffRunning()
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 }
 
+void ACPlayer::OnAim()
+{
+	if (Weapon->GetEquipped() == false) return;
+	if (Weapon->GetEquipping() == true) return;
+
+	bUseControllerRotationYaw = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+
+	SpringArm->TargetArmLength = 100;
+	SpringArm->SocketOffset = FVector(0, 30, 10);
+	//Camera->FieldOfView = 40;
+
+	Weapon->OnAim();
+}
+
+void ACPlayer::OffAim()
+{
+	if (Weapon->GetEquipped() == false) return;
+	if (Weapon->GetEquipping() == true) return;
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	SpringArm->TargetArmLength = 200;
+	SpringArm->SocketOffset = FVector(0, 60, 0);
+	//Camera->FieldOfView = 90;
+
+	Weapon->OffAim();
+}
+
+void ACPlayer::EquipWeapon()
+{
+	if (Weapon->GetEquipped())
+	{
+		Weapon->Unequip();
+		return;
+	}
+
+	Weapon->Equip();
+}

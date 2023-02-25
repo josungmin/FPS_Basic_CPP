@@ -19,6 +19,8 @@ public:
 public:
 	ACPlayer();
 
+	FORCEINLINE class ACWeapon* GetWeapon() { return Weapon; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -35,4 +37,13 @@ private:
 private:
 	void OnRunning();
 	void OffRunning();
+
+	void OnAim();
+	void OffAim();
+
+private:
+	void EquipWeapon();
+		
+private:
+	class ACWeapon* Weapon;
 };

@@ -1,6 +1,9 @@
 #include "CWeapon.h"
 #include "Global.h"
+#include "CPlayer.h"
 #include "GameFramework/Character.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimMontage.h"
 
 ACWeapon* ACWeapon::Spawn(UWorld* InWorld, ACharacter* InOwner)
 {
@@ -13,10 +16,13 @@ ACWeapon* ACWeapon::Spawn(UWorld* InWorld, ACharacter* InOwner)
 ACWeapon::ACWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 
-	//USkeletalMesh* mesh;
-	//CHelpers::FindAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Weapon/AR4/Meshes/SK_AR4.SK_AR4'");
-	//Mesh->SetSkeletalMesh(mesh);
+	USkeletalMesh* mesh;
+	CHelpers::FindAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Weapon/AR4/Meshes/SK_AR4.SK_AR4'");
+	Mesh->SetSkeletalMesh(mesh);
+
+	CHelpers::FindAsset<UAnimMontage>(&EquipAndUnequipMontage, "AnimMontage'/Game/Player/Montages/Aemed_Grab_And_Ungrab_Montage.Aemed_Grab_And_Ungrab_Montage'");
 }
 
 void ACWeapon::BeginPlay()
@@ -33,18 +39,18 @@ void ACWeapon::Tick(float DeltaTime)
 
 }
 
-void ACWeapon::Equiped()
+void ACWeapon::Equip()
 {
 	if (bEquipped == true) return;
 	if (bEquipping == true)return;
 
 	bEquipping = true;
 
-	OwnerCharacter->PlayAnimMontage(EquipMontage);
+	OwnerCharacter->PlayAnimMontage(EquipAndUnequipMontage, 1.0f, "Equip");
 }
 
 // Use EquipWeapon Animation Notify State
-void ACWeapon::PreEquiped()
+void ACWeapon::PreEquip()
 {
 	bEquipped = true;
 
@@ -52,23 +58,23 @@ void ACWeapon::PreEquiped()
 }
 
 // Use EquipWeapon Animation Notify State
-void ACWeapon::PostEquiped()
+void ACWeapon::PostEquip()
 {
 	bEquipping = false;
 }
 
-void ACWeapon::Unequiped()
+void ACWeapon::Unequip()
 {
 	if (bEquipped == false) return;
 	if (bEquipping == true)return;
 
 	bEquipping = true;
 
-	OwnerCharacter->PlayAnimMontage(EquipMontage);
+	OwnerCharacter->PlayAnimMontage(EquipAndUnequipMontage, 1.0f, "Unequip");
 }
 
 // Use UnequipWeapon Animation Notify State
-void ACWeapon::PreUnequiped()
+void ACWeapon::PreUnequip()
 {
 	bEquipped = false;
 
@@ -76,7 +82,17 @@ void ACWeapon::PreUnequiped()
 }
 
 // Use UnequipWeapon Animation Notify State
-void ACWeapon::PostUnequiped()
+void ACWeapon::PostUnequip()
 {
-	bEquipping = true;
+	bEquipping = false;
+}
+
+void ACWeapon::OnAim()
+{
+	bAimed = true;
+}
+
+void ACWeapon::OffAim()
+{
+	bAimed = false;
 }

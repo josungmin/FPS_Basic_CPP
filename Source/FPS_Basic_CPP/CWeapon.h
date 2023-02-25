@@ -29,26 +29,27 @@ private:
 		class USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UAnimMontage* EquipMontage;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UAnimMontage* UnequipMontage;
+		class UAnimMontage* EquipAndUnequipMontage;
 
 
 public:
 	static ACWeapon* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
 
-	FORCEINLINE bool GetEquiped(){ return bEquipped; }
-	FORCEINLINE bool GetEquiping(){ return bEquipping; }
+	FORCEINLINE bool GetEquipped(){ return bEquipped; }
+	FORCEINLINE bool GetEquipping(){ return bEquipping; }
+	FORCEINLINE bool GetAimed() { return bAimed; }
 
 public:
-	void PreEquiped();
-	void Equiped();
-	void PostEquiped();
+	void PreEquip();
+	void Equip();
+	void PostEquip();
 
-	void PreUnequiped();
-	void Unequiped();
-	void PostUnequiped();
+	void PreUnequip();
+	void Unequip();
+	void PostUnequip();
+
+	void OnAim();
+	void OffAim();
 
 private:
 	class ACharacter* OwnerCharacter;
@@ -56,4 +57,5 @@ private:
 private:
 	bool bEquipped;
 	bool bEquipping;
+	bool bAimed;
 };

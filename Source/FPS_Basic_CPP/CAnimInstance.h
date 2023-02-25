@@ -19,6 +19,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		bool bIsInAir;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool bEquiped;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool bAimed;
+
 public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
